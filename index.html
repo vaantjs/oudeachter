@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Memory</title>
+    <style>
+        body {
+            background-color: #a8d0e6;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-top: 20%;
+        }
+        .container {
+            display: none; /* Verberg de containers standaard */
+            margin-top: 20px;
+        }
+        p {
+            font-size: 1.2em;
+            margin: 20px 0;
+        }
+        button {
+            font-size: 1em;
+            padding: 10px 20px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Number Memory</h1>
+
+    <!-- Introductie scherm -->
+    <div class="container" id="intro">
+        <p>A number will show on the screen for a short time.<br>
+        Type in the correct number to progress to the next level, which will add 1 digit to the number.</p>
+        <button onclick="startGame()">Start Game</button>
+    </div>
+
+    <!-- Nummer scherm -->
+    <div class="container" id="numberScreen">
+        <p id="numberToRemember"></p>
+    </div>
+
+    <!-- Invoerscherm -->
+    <div class="container" id="inputScreen">
+        <p>What was the number shown?</p>
+        <input type="text" id="numberInput" placeholder="Enter your answer">
+        <button onclick="checkAnswer()">Submit</button>
+        <p id="result"></p>
+    </div>
+
+    <!-- Resultaten scherm -->
+    <div class="container" id="resultScreen">
+        <p id="finalResult"></p>
+        <p>Your score: <span id="scoreDisplay"></span></p>
+        <p>Time taken: <span id="timeDisplay"></span> seconds</p>
+        <button onclick="restartGame()">Restart Game</button>
+    </div>
+
+    <script>
+        let currentLevel = 1;
+        let numberToRemember;
+        let score = 0;
+        let startTime;
+
+        // Toon het introductiescherm
+        document.getElementById('intro').style.display = 'block';
+
+        function startGame() {
+            document.getElementById('intro').style.display = 'none';
+            score = 0; // Reset score
+            currentLevel = 1; // Reset level
+            startTime = Date.now(); // Start timer
+            showNumber();
+        }
+
+        function showNumber() {
+            // Genereer een nummer met het aantal cijfers gelijk aan het huidige niveau
+            numberToRemember = Math.floor(Math.random() * Math.pow(10, currentLevel)).toString();
+            document.getElementById('numberToRemember').innerText = numberToRemember;
+            document.getElementById('numberScreen').style.display = 'block';
+
+            // Verberg het nummer na 2 seconden
+            setTimeout(() => {
+                document.getElementById('numberScreen').style.display = 'none';
+                showInput();
+            }, 2000);
+        }
+
+        function showInput() {
+            document.getElementById('inputScreen').style.display = 'block';
+            document.getElementById('numberInput').value = ''; // Leeg het invoerveld
+            document.getElementById('result').innerText = ''; // Leeg de resultaat tekst
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('numberInput').value;
+            if (userAnswer === numberToRemember) {
+                document.getElementById('result').innerText = "Correct! Next level.";
+                score++; // Increase score
+                currentLevel++;
+                setTimeout(() => {
+                    document.getElementById('inputScreen').style.display = 'none';
+                    showNumber();
+                }, 2000);
+            } else {
+                // Bij een foutief antwoord, geef een foutmelding
+                document.getElementById('result').innerText = "Incorrect! The
